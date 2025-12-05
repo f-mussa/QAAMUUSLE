@@ -3,9 +3,7 @@
   /* --rows: 6; */
   --keyboard-max-height: 35%;
   --main-margin-top: 96px;
-
-  /* --background-color: #121213;
-  --text-color: #d7dadc; */
+  
   --background-color: black;
   --langtoggle-background-color: #6aaa64;
   --keyboard-background-color: #818384;
@@ -193,19 +191,6 @@ header .top-row {
   white-space: nowrap;  /* prevent wrapping to next line */
   margin-top: 0.5rem;
 }
-/* 2+ character score (including decimal) */
-/* #scoreValue[data-length="2"] {
-  padding: 0 0.4rem;
-} */
-/* 3+ character score */
-/* #scoreValue[data-length="3"] {
-  padding: 0 0.5rem;
-} */
-
-/* 4+ characters (rare, like 100.5) */
-/* #scoreValue[data-length="4"] {
-  padding: 0 0.6rem;
-} */
 
 /* Buttons group */
 .buttons-group {
@@ -337,7 +322,6 @@ main {
   max-height: var(--keyboard-max-height);
   padding: clamp(0.2rem, 1vh, 0.5rem) 0.5rem; /* shrink padding on short screens */
   margin-top: 0;
-  /* margin-bottom: 0.5rem; */
   background: var(--background-color);
   min-height: 0;
 }
@@ -619,13 +603,7 @@ footer {
 
 /* === Responsive Fixes === */
 
-/* 1. Very short screens (≤600px tall) 
-   → Shrink board/keyboard so nothing overflows */
-/* @media (max-height: 600px) {
-
-} */
-
-/* 2. Small phones / narrow screens (≤480px wide) 
+/* 1. Small phones / narrow screens (≤480px wide) 
    → Make keys/text scale better */
 @media (max-width: 480px) {
   #keyboard .key {
@@ -661,7 +639,7 @@ footer {
   }
 }
 
-/* 3. General phones (≤600px wide)
+/* 2. General phones (≤600px wide)
    → Hide tagline, adjust logo/score spacing */
 @media (max-width: 600px) {
   .tagline { display: none; }
@@ -680,21 +658,3 @@ footer {
     white-space: normal;/* allow wrapping on big screens */
   }
 }
-
-/* 4. Tablets / small laptops (601px–1024px wide) 
-   → Cap board size a bit taller */
-/* @media (max-width: 1024px) and (min-height: 700px) {
-
-} */
-
-/* 5. Tall desktops (≥900px tall) 
-   → Board takes slightly more space */
-/* @media (min-height: 900px) {
-
-} */
-
-/* 6. Very tall monitors (≥1200px tall)
-   → Allow board to grow more if desired */
-/* @media (min-height: 1200px) {
-
-} */
