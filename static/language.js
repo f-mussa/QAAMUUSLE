@@ -31,7 +31,7 @@ const texts = {
     scoreHowtoPlaydesc: "<span id='icon'>⭐</span><b>Score:</b> Can be found at top right of screen. You get +1 for every correct word.<span id='icon'>❌</span>Use all 6 tries and lose your points. Keep your streak alive daily!",
     scoreHowtoPlaydesc1: "<i id='icon'class='bi bi-lightbulb'></i><b>Hint:</b> Can be found at top right of screen (under score). You get <b>1 hint</b> each day, but using it will cost you<span id='icon'>🔻</span><b>0.5 points</b>",
     aboutUs: "About Us",
-    aboutUsDesc:"Hi!<span id='icon'>👋</span>My name is Khadra(a.k.a koalasprite). I’m really passionate about programming and building projects that create positive online spaces for Somali people around the world and anyone interested in our language/culture.",
+    aboutUsDesc:"Hi!<span id='icon'>👋</span>My name is [USERNAME]. I’m really passionate about programming and building projects that create positive online spaces for Somali people around the world and anyone interested in our language/culture.",
     aboutUsDesc1:"Qaamuusle is more than just a word game - it’s a celebration of the Somali language, culture, and community. My mission is to keep Somali alive, fun, and accessible through play.<span id='icon'>🌍✨</span>",
     aboutUsDesc2:"Every visit, every guess, and every word strengthens our connection to our heritage. If you enjoy Qaamuusle, your support helps me keep the project free and available for everyone.<span id='icon'>❤️</span>",    
     aboutUsDesc3:"Follow me for updates, new features, and Somali language content:",
@@ -60,8 +60,6 @@ const texts = {
     hint: "Hint", 
     help: "Help",
     buymecoffee: "Buy Me a Coffee",
-    // correctAnswer: "✅ Correct!", 
-    // wrongAnswer : "❌ Not quite…",
     comebackDesc: "Don’t break your streak! Come back tomorrow for your next word. Love this game? A small coffee keeps it running and growing for everyone.",
     share: "Share with friends"
   },
@@ -83,7 +81,7 @@ const texts = {
     scoreHowtoPlaydesc: "<span id='icon'>⭐</span><b>Dhibco:</b> Waxaa laga heli karaa dhanka midig sare ee shaashadda. Eray kasta oo sax ah, waxaad helaysaa +1.<span id='icon'>❌</span>Isticmaal dhammaan 6 fursadood oo lumin dhibcahaaga. Xariggaaga ha jabin, sii noolee maalin kasta!", 
     scoreHowtoPlaydesc1: "<i id='icon' class='bi bi-lightbulb'></i> <b>Tilmaan:</b> Waxa laga heli karaa dhanka midig sare ee shaashadda (dhibcaha hoostiisa). Waxaad helaysaa <b>1 tilmaan</b> maalin kasta, laakiin isticmaalkeeda waxay kaa qaadaysaa<span id='icon'>🔻</span><b>0.5 dhibcood</b>.",
     aboutUs: "Nagu saabsan",
-    aboutUsDesc:"Salaam!<span id='icon'>👋</span>Magacaygu waa Khadra(a.k.a koalasprite). Runtii aad ayaan u xiiseeyaa in aan u dhiso goobo internet oo togan oo loogu talagalay dadka Soomaaliyeed ee ku nool aduunka oo dhan iyo cid kasta oo doonaysa in ay bartaan luuqadeena iyo dhaqankeena.",
+    aboutUsDesc:"Salaam!<span id='icon'>👋</span>Magacaygu waa [USERNAME]. Runtii aad ayaan u xiiseeyaa in aan u dhiso goobo internet oo togan oo loogu talagalay dadka Soomaaliyeed ee ku nool aduunka oo dhan iyo cid kasta oo doonaysa in ay bartaan luuqadeena iyo dhaqankeena.",
     aboutUsDesc1:"Qaamuusle waa wax ka badan ciyaar-erey - waa dabbaaldegga afka, dhaqanka iyo bulshada Soomaaliyeed. Hadafkaygu waa in aan afka soomaaligu sii noolaado, maaweelo, oo ciyaar lagu heli karo.<span id='icon'>🌍✨</span>",
     aboutUsDesc2:"Booqasho kasta, isku day kasta iyo eray kasta waxa ay xoojiyaan xidhiidhka aynu la leenahay dhaxalkeenna. Haddii aad ku raaxaysato Qaamuusle, taageeradaadu waxay iga caawinaysaa in aan mashruuca ka dhigo mid xor ah oo qof walba heli karo.<span id='icon'>❤️</span>",  
     aboutUsDesc3:"iilasoco wixii kusoo kordha, muuqaalada cusub, iyo waxa ku jira luqadda Soomaaliga:",  
@@ -112,8 +110,6 @@ const texts = {
     hint: "Tilmaam", 
     help: "Caawin",
     buymecoffee: "Qaxwo ii soo Gad",
-    // correctAnswer: "✅ SAX!", 
-    // wrongAnswer : "❌ Khalad…",
     comebackDesc: "Xariggaaga ha jabin! Berri ku soo noqo eraygaaga xiga. Ma jeceshahay ciyaartan? Qaxwaha yar ayaa ku haya inuu socdo oo u korayo qof kasta.",
     share: "La wadaag asxaabtaada" 
   }
