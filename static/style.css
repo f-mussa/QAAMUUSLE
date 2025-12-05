@@ -1,0 +1,700 @@
+:root {
+  --board-max-height: 65%;
+  /* --rows: 6; */
+  --keyboard-max-height: 35%;
+  --main-margin-top: 96px;
+
+  /* --background-color: #121213;
+  --text-color: #d7dadc; */
+  --background-color: black;
+  --langtoggle-background-color: #6aaa64;
+  --keyboard-background-color: #818384;
+  --text-color: white; 
+  --footer-text-color: #ccc;
+  --other-text-color:#aaa;
+  --hover-color: #2a2a2c;
+
+  --filled: #565758;
+  --correct: #6aaa64;
+  --present: #c9b458;
+  --absent: #3a3a3c;
+}
+
+/* === Global Font Reset === */
+html {
+  font-size: 10px; /* base = 10px → 1rem = 10px for easy scaling */
+}
+
+/* === Base Layout === */
+body {
+  font-family: "Press Start 2P", monospace, "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji", sans-serif;
+  font-size: 0.6rem; /* ~6px in pixel font terms */
+  line-height: 1.4;
+  background: var(--background-color);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* === Headings / Special text === */
+h1, h2, h3, h4, h5, h6 {
+  font-family: inherit;
+  font-weight: normal;
+  line-height: 1.3;
+}
+
+/* === Global buttons (will override size when needed) === */
+button, .btn {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+/* === Splash Screen === */
+#splash-screen {
+  position: fixed;     /* stay on top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;       /* above everything */
+  margin: 0;
+  background: var(--background-color);
+  color: var(--text-color);
+  font-family: "Press Start 2P", monospace; /* retro pixel font */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#splash-screen h1, #splash-screen h2 {
+  margin: 20px 0;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+/* Fade-out effect */
+#splash-screen.fade-out {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+}
+
+/* Pixelated loading bar container */
+.loading-bar {
+  width: 240px;
+  height: 24px;
+  border: 4px solid --text-color;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  box-sizing: border-box;
+  image-rendering: pixelated;
+}
+/* Inner fill */
+.loading-fill {
+  height: 100%;
+  background: var(--text-color);
+  animation: fill 2s steps(10) infinite;
+}
+@keyframes fill {
+  0%   { width: 0%; }
+  50%  { width: 100%; }
+  100% { width: 0%; }
+}
+
+/* === Header container === */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1050;
+  background: var(--background-color);
+  color: var(--text-color);
+  width: 100%;
+  border-bottom: 0.5px solid rgb(89, 89, 89); /* white outline */
+  padding: 0; /* remove padding so tiles touch edges */
+}
+
+/* Top row: Title + Score */
+header .top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.5rem 0.75rem 0 0.75rem;
+}
+/* Whole header row */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* so logo + tagline stack naturally */
+}
+
+/* Logo + tagline column */
+.title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0;
+  padding: 0;
+  padding-left: 0.5rem;
+  font-size: 1.2rem;
+}
+/* Large logo */
+.logo {
+  width: 20vw;
+  max-width: 120px;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  image-rendering: pixelated;
+}
+/* Tagline under logo */
+.tagline {
+  color: var(--other-text-color);
+  margin: 0.25rem 0 0 0;
+  line-height: 1.2;
+}
+
+/* Right side (score + buttons) */
+.right-block {
+  display: flex;
+  flex-direction: column;   /* stack vertically */
+  align-items: flex-end;    /* align text/buttons to the right */
+  justify-content: flex-end;/* push buttons to bottom line */
+  gap: 1rem; /* space between score and buttons */
+}
+#score {
+  font-size: 1rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center; /* use center instead of baseline */
+  gap: 0.25rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.9rem;
+  overflow: visible; /* allow content to overflow if needed */
+}
+#score span:first-child {
+  font-size: 2rem; /* star size */
+  line-height: 1; 
+}
+/* Default single-digit / short scores */
+#scoreValue {
+  font-size: 1.3rem; /* slightly larger for visibility */
+  display: inline-block;
+  padding: 0 0.4rem;
+  text-align: center;
+  min-width: auto;      /* allow natural width */
+  max-width: 100%;      /* don’t overflow parent */
+  white-space: nowrap;  /* prevent wrapping to next line */
+  margin-top: 0.5rem;
+}
+/* 2+ character score (including decimal) */
+/* #scoreValue[data-length="2"] {
+  padding: 0 0.4rem;
+} */
+/* 3+ character score */
+/* #scoreValue[data-length="3"] {
+  padding: 0 0.5rem;
+} */
+
+/* 4+ characters (rare, like 100.5) */
+/* #scoreValue[data-length="4"] {
+  padding: 0 0.6rem;
+} */
+
+/* Buttons group */
+.buttons-group {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+/* Wordle-style flat tiles */
+.header-btn,
+.lang-toggle label {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background-color);
+  color: var(--text-color);
+  font-size: 1.5rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  margin: 0; /* remove default spacing */
+}
+/* Hover effect */
+.header-btn:hover,
+.lang-toggle label:hover {
+  background: var(--hover-color);
+}
+
+/* Help button icon */
+#helpBtn i{
+  font-size: 1.8rem;
+}
+
+/* Language toggle baked in */
+.lang-toggle {
+  display: flex;
+  margin: 0;
+}
+.lang-toggle input {
+  display: none;
+}
+.lang-toggle input:checked + label {
+  background: var(--langtoggle-background-color);
+  color: var(--text-color);
+}
+
+/* === Main Layout === */
+main {
+  margin-top: var(--main-margin-top);
+  height: calc(100dvh - var(--main-margin-top)); /*header is ~120px tall*/
+  flex: 1 0 auto; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* board top, keyboard bottom */
+  align-items: center;
+  width: 100%;
+  overflow: hidden; /*avoid scrollbars */
+  min-height: 0;
+  gap: 0.5rem;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
+}
+
+/* === Board === */
+#board {
+  flex: 1 1 var(--board-max-height);                 /* grow if needed */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;        /* vertically center rows inside board area */
+  align-items: center;
+  width: 100%;
+  max-width: 400px;               /* fits 5-6 tiles comfortably */
+  aspect-ratio: 5 / 6; 
+  max-height: var(--board-max-height); 
+  gap: 0.3rem;
+  padding: 0 0.2rem;
+  min-height: 0;   
+}
+
+/* Rows inside board */
+.row {
+  flex: 1; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3rem;
+  width: 100%;
+  max-width: 70%;
+  min-height: 0;
+}
+
+/* === Tiles (for rows inside board) === */
+.tile {
+  flex: 1;       /* allow tiles to grow AND shrink */
+  min-width: 0;
+  aspect-ratio: 1 / 1;
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(1rem, 4vw, 1.4rem);
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 2px solid #868687;
+  background: var(--background-color);
+  color: var(--text-color);
+  transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+
+/* Tile states (for rows inside board) */
+.filled { border-color: var(--filled); }
+.correct { background: var(--correct) !important; border-color: var(--correct) !important; }
+.present { background: var(--present) !important; border-color: var(--present) !important; }
+.absent { background: var(--absent) !important; border-color: var(--absent) !important; }
+
+/* === Keyboard === */
+#keyboard {
+  flex: 1 1 var(--keyboard-max-height);                 /* natural height, won’t shrink into nothing */
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: center;
+  gap: 0.3rem;
+  width: 100%;
+  max-width: 500px;
+  max-height: var(--keyboard-max-height);
+  padding: clamp(0.2rem, 1vh, 0.5rem) 0.5rem; /* shrink padding on short screens */
+  margin-top: 0;
+  /* margin-bottom: 0.5rem; */
+  background: var(--background-color);
+  min-height: 0;
+}
+
+.kb-row {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 0.3rem;
+  width: 100%;
+  max-width: 95%;
+}
+
+/* Keys */
+.key {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  padding: 0; /* scale with viewport height */
+  font-size: clamp(0.6rem, 2.5vh, 1rem); /* shrink gracefully on short screens */
+  font-weight: bold;
+  border-radius: 4px;
+  border: none;
+  color: var(--text-color);
+  background-color: var(--keyboard-background-color);
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+
+.key.correct { background: var(--correct); }
+.key.present { background: var(--present); }
+.key.absent { background: var(--absent); }
+.wide { 
+  flex: 1.5 1 0; /* slightly wider */
+  font-size: clamp(0.5rem, 2vh, 0.9rem);  
+}
+.extra-wide {
+  flex: 1.5 1 0; /* make it even wider */
+  font-size: clamp(1rem, 3vh, 1.5rem); /* keep font consistent */
+}
+
+/* === Footer === */
+footer {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  gap: 1rem; /* space between links without dashes */
+  flex-wrap: wrap; /* allows wrapping if needed */
+  font-size:1.2rem;
+}
+.footer-link {
+  color: var(--footer-text-color);
+  text-decoration: none;
+}
+.footer-link:hover {
+  color: var(--text-color);
+  text-decoration: underline;
+}
+
+/* === Toast === */
+#toast {
+  position: fixed;
+  top: 200px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  background: #333;
+  color: var(--text-color);
+  padding: 4px 8px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 1100;
+  font-size: 1rem;
+  max-width: 90vw;      /* 👈 makes it fit the screen width */
+  text-align: center;   /* centers text nicely */
+  white-space: normal;  /* optional: keep it all on one line */
+  overflow-wrap: break-word;
+  line-height: 1.4;  
+}
+#toast.show { opacity: 1; }
+
+#resultAnimation {
+  z-index: 1039; 
+  display: none; 
+  background: rgba(0,0,0,0.3);
+  pointer-events: none; /* let clicks pass through */
+}
+#resultAnimation.showing { 
+  pointer-events: auto; /* block clicks only when overlay actively shows something */
+}
+
+/* === Animations === */
+.shake { animation: shake 0.6s; }
+@keyframes shake {
+  10%, 90% { transform: translateX(-4px); }
+  20%, 80% { transform: translateX(8px); }
+  30%, 50%, 70% { transform: translateX(-16px); }
+  40%, 60% { transform: translateX(16px); }
+}
+
+.bounce { animation: bounce 0.5s; }
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-20px); }
+  60% { transform: translateY(-10px); }
+}
+
+.flip { transform: rotateY(90deg); }
+
+/* Happy face styling */
+.happy-face {
+  font-size: 6rem;
+  position: relative;
+  z-index: 2;
+  animation: nod 1s ease-in-out 2;
+}
+@keyframes nod {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(10deg); }
+  75% { transform: rotate(-10deg); }
+}
+
+/* Sad face styling */
+.sad-face {
+  font-size: 6rem;
+  position: relative;
+  z-index: 2;
+  animation: fadePulse 1s ease forwards, shake 0.8s ease-in-out 1.2s; 
+}
+/* Fade + pulse effect */
+@keyframes fadePulse {
+  0%   { opacity: 0; transform: scale(0.8); }
+  50%  { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Rain container */
+.rain {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Each raindrop */
+.drop {
+  position: absolute;
+  width: 2px;
+  height: 15px;
+  background: rgba(173, 216, 230, 0.8); /* light blue */
+  animation: fall linear infinite;
+}
+@keyframes fall {
+  0% { transform: translateY(-20px); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+.confetti, .sad-face, .rain, .drop {
+  pointer-events: none;
+}
+
+/* Streak raining animation */
+.streak-rain .drop {
+  position: absolute;
+  top: -2rem;
+  font-size: 1.2rem;
+  opacity: 0.8;
+  animation-name: streakFall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes streakFall {
+  0% { transform: translateY(-2rem) rotate(0deg); opacity: 0.8; }
+  100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+
+/* Coffee cup bounce */
+.bi-cup-hot{
+  animation: cupBounce 1s ease-in-out infinite;
+  font-size: 2rem;
+}
+.coffee-cup {
+  display: inline-block;
+  animation: cupBounce 1s ease-in-out infinite;
+  font-size: 2rem;
+}
+@keyframes cupBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px) rotate(-5deg); }
+}
+
+/* === Modal styling === */
+.modal-title {font-size: 1rem;}
+.modal-content {
+  background-color: #121213;
+  color: var(--text-color);
+  border-radius: 8px;
+  border: 1px solid #3a3a3c;
+}
+.modal-header { border-bottom: 1.25px solid #3a3a3c; }
+.modal-footer { border-top: 1px solid #3a3a3c; }
+.modal-body{overflow-y: auto;}
+.modal-body, .modal-footer, .modal-header {font-size: 1.15rem;}
+.modal-body small {font-size: 0.99rem;}
+.modal-body #icon {
+  font-size: 1.5rem;
+  padding-right: 0.5rem;
+}
+.modal-footer button, .modal-body button {font-size: 1rem;}
+.modal textarea {
+  overflow-y: hidden; /* prevent double scrollbars */
+  min-height: 100px;
+  max-height: 60vh;
+}
+.btn-close { filter: invert(1); }
+.form-control {
+  background-color: #3a3a3c;
+  color: var(--text-color);
+  border: none;
+}
+.form-control:focus {
+  background-color: #3a3a3c;
+  color: var(--text-color);
+  box-shadow: none;
+  border: 1px solid #565758;
+}
+.btn-custom {
+  background-color: #565758;
+  color: var(--text-color);
+  border: none;
+}
+.btn-custom:hover { background-color: #818384; }
+
+/* How to Play modal example tiles */
+#howToPlayModal .tile2 {
+  width: 59px;            /* fixed size for modal */
+  height: 59px;           /* square shape */
+  aspect-ratio: 1 / 1;    /* extra safety for square */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0.15rem;      /* small gap like board */
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 2px solid #868687;
+  background: var(--background-color);
+  color: var(--text-color);
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+/* Make tutorial nav buttons match Got It button size */
+#howToPlayModal .modal-footer .btn i {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+#howToPlayModal .modal-footer .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;       /* same width as Got it! */
+  height: 40px;       /* same height as Got it! */
+  font-size: 1rem;    /* keep spacing consistent */
+  border-radius: 0.375rem; /* same Bootstrap rounding */
+}
+
+/* Comeback modal - Make modal buttons uniform size like coffee button */
+#modal-btn-group button {
+  font-size: 1rem;
+}
+#modal-btn-group .emoji-big {
+  display: inline-block;
+  font-size: 1.8rem;
+}
+
+/* === Responsive Fixes === */
+
+/* 1. Very short screens (≤600px tall) 
+   → Shrink board/keyboard so nothing overflows */
+/* @media (max-height: 600px) {
+
+} */
+
+/* 2. Small phones / narrow screens (≤480px wide) 
+   → Make keys/text scale better */
+@media (max-width: 480px) {
+  #keyboard .key {
+    font-size: clamp(0.8rem, 2vh, 1.2rem);
+  }
+  #keyboard .key.wide {
+    font-size: clamp(0.45rem, 2vh, 0.8rem);
+  }
+  #keyboard .key.extra-wide {
+    font-size: clamp(1rem, 3vh, 1.5rem);
+  }
+
+    /* Make icon bigger */
+  #icon {
+    font-size: 2.25rem; /* bump up size */
+  }
+
+  /* Stack footer links vertically */
+  footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem; /* spacing between stacked links */
+    font-size: 1.1rem;
+  }
+  .footer-link {
+    display: block;
+    text-align: center;
+  }
+
+  #modal-btn-group {
+    gap: 0.5rem; /* small vertical gap */
+  }
+}
+
+/* 3. General phones (≤600px wide)
+   → Hide tagline, adjust logo/score spacing */
+@media (max-width: 600px) {
+  .tagline { display: none; }
+
+  .logo {
+    width: 28vw;
+    max-width: 180px;
+    margin-top: 0.5rem;
+  }
+
+  .right-block { gap: 0.5rem; }
+  #score { margin-bottom: 0; }
+
+  #toast {
+    max-width: 400px;   /* keep it small and centered */
+    white-space: normal;/* allow wrapping on big screens */
+  }
+}
+
+/* 4. Tablets / small laptops (601px–1024px wide) 
+   → Cap board size a bit taller */
+/* @media (max-width: 1024px) and (min-height: 700px) {
+
+} */
+
+/* 5. Tall desktops (≥900px tall) 
+   → Board takes slightly more space */
+/* @media (min-height: 900px) {
+
+} */
+
+/* 6. Very tall monitors (≥1200px tall)
+   → Allow board to grow more if desired */
+/* @media (min-height: 1200px) {
+
+} */

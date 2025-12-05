@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title data-i18n="webtitle">Qaamuusle: Somali Word Game</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Qaamuusle is a Somali Wordle-style game. Guess the Somali word in 6 tries, learn new words, and celebrate Somali language and culture daily.">
+  <meta property="og:title" content="Qaamuusle: Somali Word Game. Wordle but with Somali words! Guess in 6 tries, learn, and share.">
+  <meta property="og:description" content="Wordle but with Somali words! Guess in 6 tries, learn, and share.">
+  <meta property="og:image" content="https://qaamuusle.onrender.com/static/images/titleImg.png">
+  <meta property="og:url" content="https://qaamuusle.onrender.com/">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="/static/images/titleImg.png" type="image/png">
+
+  <!-- Bootstrap CSS / Pixel font / Canva reaction js -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js" defer></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <!-- Splash Screen -->
+  <div id="splash-screen">
+    <h1>QAAMUUSLE</h1>
+    <div class="loading-bar">
+      <div class="loading-fill"></div>
+    </div>
+    <h2>LOADING...</h2>
+  </div>
+
+  <header>
+    <div class="header-row">
+      <!-- Left side: logo + tagline -->
+      <div class="title-block">
+        <img src="/static/images/logoImg.png" alt="Qaamuusle Logo" class="logo">
+        <small class="tagline" data-i18n="tagline">Somali Word Puzzle • Play Daily</small>
+      </div>
+
+      <!-- Right side: score + buttons -->
+      <div class="right-block">
+        <div id="score"><span>⭐</span><span id="scoreValue">0</span></div>
+
+        <div class="buttons-group">
+          <!-- Help -->
+          <button id="helpBtn" class="header-btn" title="Help/Caawin"
+            data-bs-toggle="modal" data-bs-target="#howToPlayModal">
+            <i class="bi bi-question-lg"></i>
+          </button>
+          <!-- Hint -->
+          <button id="hintBtn" class="header-btn" title="Hint/Tilmaam">
+            <i class="bi bi-lightbulb"></i>
+          </button>
+          <!-- Language toggle -->
+          <div class="lang-toggle">
+            <input type="radio" class="btn-check" name="langToggle" id="langEn" autocomplete="off">
+            <label for="langEn">EN</label>
+            <input type="radio" class="btn-check" name="langToggle" id="langSo" autocomplete="off">
+            <label for="langSo">SO</label>
+          </div>
+          <!-- Buy Me a Coffee -->
+          <a href="https://www.buymeacoffee.com/koalasprite" target="_blank" rel="noopener noreferrer"
+            class="header-btn" title="Buy Me a Coffee/Qaxwo ii soo Gad">
+            <i class="bi bi-cup-hot"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Language Modal -->
+  <div class="modal fade" id="languageModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header">
+          <h5 class="modal-title">Choose Language</h5>
+        </div>
+        <div class="modal-body text-center">
+          <button class="btn btn-primary me-2" onclick="setLanguage('en')">English</button>
+          <button class="btn btn-success" onclick="setLanguage('so')">Somali</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="d-flex flex-column align-items-center">
+    <div id="board"></div>
+    <div id="keyboard"></div>
+    <div id="toast"></div>
+  </main>
+
+  <!-- How to Play Modal -->
+   <div class="modal fade" id="howToPlayModal" tabindex="-1" aria-labelledby="howToPlayLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="howToPlayLabel" data-i18n="howToPlay">How to Play Qaamuusle</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <!-- PAGE 1 -->
+          <div class="howto-page" data-page="1">
+            <p data-i18n="howToPlayDesc">Guess the <strong>Somali word</strong> in <b>6 tries</b>.</p>
+            <p data-i18n="howToPlayDesc1">Each guess must be a valid 5-letter Somali word. Tile colors tell you how close you are:</p>
+          </div>
+
+          <!-- PAGE 2 -->
+          <div class="howto-page d-none" data-page="2">
+            <!-- examples -->
+            <div class="mb-3">
+              <div class="d-flex justify-content-center mb-1">
+                <div class="tile2 correct">N</div><div class="tile2">A</div><div class="tile2">B</div><div class="tile2">A</div><div class="tile2">D</div>
+              </div>
+              <small data-i18n="howToPlayDesc2">🟩 <b>Green:</b> Correct letter, right spot.</small>
+            </div>
+
+            <div class="mb-3">
+              <div class="d-flex justify-content-center mb-1">
+                <div class="tile2">Q</div><div class="tile2 present">A</div><div class="tile2">L</div><div class="tile2">B</div><div class="tile2">I</div>
+              </div>
+              <small data-i18n="howToPlayDesc3">🟨 <b>Yellow:</b> Letter is in the word, wrong spot.</small>
+            </div>
+
+            <div class="mb-3">
+              <div class="d-flex justify-content-center mb-1">
+                <div class="tile2">R</div><div class="tile2">U</div><div class="tile2 absent">N</div><div class="tile2">T</div><div class="tile2">A</div>
+              </div>
+              <small data-i18n="howToPlayDesc4">⬜ <b>Gray:</b> Letter not in the word.</small>
+            </div>
+          </div>
+
+          <!-- PAGE 3 -->
+          <div class="howto-page d-none" data-page="3">
+            <h6 class="fw-bold mt-3" data-i18n="scoreHowtoPlay">Score & Hints</h6>
+            <p data-i18n="scoreHowtoPlaydesc">⭐ <b>Score:</b> Top-right corner shows your points. +1 for every correct word. ❌ Miss all 6 tries → lose your points. Keep your streak alive daily!</p>
+            <p data-i18n="scoreHowtoPlaydesc1">💡 <b>Hint:</b> Stuck? Tap the floating hint button (bottom-right). You get <b>1 free hint</b> per day.</p>
+            <p class="mt-3 fw-bold" data-i18n="howToPlayDesc5">🔄 A new Somali word every day. Come back tomorrow!</p>
+          </div>
+        </div>
+
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-secondary prev-btn d-none">
+            <i class="bi bi-arrow-left-circle"></i>
+          </button>
+          <button type="button" class="btn btn-primary next-btn">
+            <i class="bi bi-arrow-right-circle"></i>
+          </button>
+          <button type="button" class="btn btn-success gotit-btn d-none" data-bs-dismiss="modal" data-i18n="gotItBtn">
+            🎉 Got it!
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confetti / Sad Overlay -->
+  <div id="resultAnimation" class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center">
+  </div>
+
+  <!-- Final Answer Modal -->
+  <div class="modal fade" id="answerModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-light text-center position-relative overflow-hidden">
+
+        <!-- Streak rain -->
+        <div class="streak-rain position-absolute top-0 start-0 w-100 h-100 pointer-events-none"></div>
+
+        <div class="modal-header border-0 justify-content-center">
+          <h5 class="modal-title animate__animated animate__bounceIn" data-i18n="answer">
+            Today's Word
+          </h5>
+          <div id="finalResult" class="fw-bold mt-2 animate__animated animate__fadeIn"></div>
+          <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-2" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body animate__animated animate__fadeInUp">
+          <div class="mb-3">
+            <div class="d-flex justify-content-center mb-1">
+              <p class="animate__animated animate__zoomIn"><strong id="finalWord"></strong></p>
+            </div>
+            <small><p id="finalMeaning" class="animate__animated animate__fadeIn"></p></small>
+          </div>
+          <div class="text-center mt-3">
+            <p class="mb-2" data-i18n="answerDesc">Enjoying Qaamuusle? Support the project ❤️</p>
+            <a href="https://www.buymeacoffee.com/koalasprite" target="_blank" rel="noopener noreferrer"
+              class="btn btn-warning btn-sm rounded-pill shadow-sm animate__animated animate__pulse animate__infinite d-inline-flex align-items-center">
+              <span class="coffee-cup me-1">☕</span>
+              <span data-i18n="buymecoffee">Buy Me a Coffee</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="modal-footer justify-content-center">
+          <button type="button" 
+                  class="btn fw-bold text-light border-0 bg-transparent shadow-none" 
+                  data-bs-dismiss="modal" 
+                  data-i18n="answerBtn">
+            Play Again Tomorrow
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comeback Modal -->
+  <div class="modal fade" id="comebackModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-light text-center position-relative overflow-hidden">
+
+        <!-- Streak rain -->
+        <div class="streak-rain position-absolute top-0 start-0 w-100 h-100 pointer-events-none"></div>
+
+        <div class="modal-header border-0 justify-content-center">
+          <h5 class="modal-title animate__animated animate__bounceIn" data-i18n="comeBackTomorrow">
+            Come back tomorrow!
+          </h5>
+          <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-2" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body animate__animated animate__fadeInUp">
+          <p class="mt-2" data-i18n="comebackDesc">
+            Don’t break your streak! Come back tomorrow for your next word.  
+            Love this game? A small coffee keeps it running and growing for everyone.
+          </p>
+
+          <div class="d-flex flex-wrap justify-content-center gap-2 mt-3" id="modal-btn-group">
+            <a href="https://www.buymeacoffee.com/koalasprite" target="_blank" rel="noopener noreferrer"
+              class="btn btn-warning btn-sm rounded-pill shadow-sm animate__animated animate__pulse animate__infinite d-inline-flex align-items-center">
+              <span class="coffee-cup me-1">☕</span>
+              <span data-i18n="buymecoffee">Buy Me a Coffee</span>
+            </a>
+
+            <button class="btn btn-info btn-sm rounded-pill shadow-sm d-inline-flex align-items-center"
+                    onclick="shareSite()">
+              <span class="emoji-big me-1">🔗</span>
+              <span data-i18n="share">Share with friends</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Footer ===== -->
+  <footer class="text-center mt-4 mb-4">
+    <a href="#" data-bs-toggle="modal" data-bs-target="#aboutModal" class="footer-link mx-2" data-i18n="aboutUs">About Us</a> 
+    <a href="#" data-bs-toggle="modal" data-bs-target="#feedbackModal" class="footer-link mx-2" data-i18n="feedback">Feedback</a> 
+    <a href="#" data-bs-toggle="modal" data-bs-target="#bugModal" class="footer-link mx-2" data-i18n="reportBug">Report Bug</a>
+  </footer>
+
+  <!-- ===== About Us Modal ===== -->
+  <div class="modal fade" id="aboutModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-light text-center">
+        <div class="modal-header border-0">
+          <h5 class="modal-title animate__animated animate__fadeInDown" data-i18n="aboutUs">
+            About Us
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body animate__animated animate__fadeInUp">
+          <p class="mb-3" data-i18n="aboutUsDesc">
+            Hi! 👋 My name is Khadra(a.k.a koalasprite). I’m really passionate about programming and building projects 
+            that create positive online spaces for Somali people around the world
+          </p>
+
+          <p class="mb-3" data-i18n="aboutUsDesc1">
+            Qaamuusle is more than just a word game - it’s a celebration of the Somali language, culture, and community.  
+            Our mission is to keep Somali alive, fun, and accessible through play. 🌍✨  
+          </p>
+
+          <p class="mb-3" data-i18n="aboutUsDesc2">
+            Every visit, every guess, and every word strengthens our connection to our heritage.  
+            If you enjoy Qaamuusle, supporting us helps keep the project free and available for everyone. ❤️
+          </p>
+
+          <p class="mb-3">
+            <span data-i18n="aboutUsDesc3">Follow us for updates, new features, and Somali language content:</span>  
+            <a href="https://www.tiktok.com/@koalasprite99" target="_blank" rel="noopener noreferrer" class="text-warning fw-bold">@koalasprite99</a>
+          </p>
+
+          <a href="https://www.buymeacoffee.com/koalasprite" target="_blank" rel="noopener noreferrer"
+            class="btn btn-warning btn-sm rounded-pill shadow-sm d-inline-flex align-items-center">
+            <span class="coffee-cup me-1">☕</span>
+            <span data-i18n="buymecoffee">Buy Me a Coffee</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div class="modal fade" id="feedbackModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-white">
+        <div class="modal-header">
+          <h5 class="modal-title" data-i18n="feedbackDesc">Send Feedback</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <textarea id="feedbackText" class="form-control" rows="4" data-i18n-placeholder="feedbackPlaceholder" placeholder="Write your feedback..."></textarea>
+          <div id="hcaptcha-feedback" class="h-captcha" data-sitekey="31be4d80-cd70-4646-a7b2-53088d6a58a4" data-size="invisible"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="closeBtn">Close</button>
+          <button id="feedbackBtn" class="btn btn-primary" onclick="submitFeedback('feedback')" data-i18n="sendBtn">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Report Bug Modal -->
+  <div class="modal fade" id="bugModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-white">
+        <div class="modal-header">
+          <h5 class="modal-title" data-i18n="reportBugDesc">Report a Bug</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <textarea id="bugText" class="form-control" rows="4" data-i18n-placeholder="bugPlaceholder" placeholder="Describe the bug..."></textarea>
+          <div id="hcaptcha-bug" class="h-captcha" data-sitekey="31be4d80-cd70-4646-a7b2-53088d6a58a4" data-size="invisible"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="closeBtn">Close</button>
+          <button  id="bugBtn" class="btn btn-danger" onclick="submitFeedback('bug')" data-i18n="reportBtn">Report</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/initializeHCaptcha.js" defer></script>
+  <script src="https://hcaptcha.com/1/api.js?onload=initHCaptcha&render=explicit" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
+  <script src="/static/initializeDOM.js" defer></script>
+  <script src="/static/language.js" defer></script>
+  <script src="/static/game.js" defer></script>
+</body>
+</html>
