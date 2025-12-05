@@ -12,7 +12,7 @@ from psycopg2.extras import RealDictCursor
 from urllib.parse import urlparse
 
 app = Flask(__name__, static_folder=None)
-CORS(app, origins=["https://qaamuusle.onrender.com"])
+CORS(app, origins=["SITEURL"])
 
 HCAPTCHA_SECRET = os.environ.get("HCAPTCHA_SECRET")  
 HCAPTCHA_VERIFY_URL = "https://hcaptcha.com/siteverify"
@@ -78,13 +78,6 @@ def get_word():
         conn = get_db_conn(admin=False)
         cur = conn.cursor(cursor_factory=RealDictCursor)
 
-        # Get total number of words in the DB
-        # cur.execute("SELECT COUNT(*) FROM words;")
-        # total_words = cur.fetchone()["count"]
-
-        # if total_words == 0:
-        #     return jsonify({"error": "No words in database"}), 404
-
         # Count unused words. If all are used, reset all to unused
         cur.execute("SELECT COUNT(*) FROM words WHERE used = FALSE;")
         unused_words = cur.fetchone()["count"]
@@ -108,14 +101,6 @@ def get_word():
         # Pick today’s word by cycling through with modulo
         offset = day_number % len(unused_words)
         word_obj = unused_words[offset]
-        # cur.execute("""
-        #     SELECT id, word, meaning_en, meaning_so, hint_en, hint_so
-        #     FROM words
-        #     WHERE used = FALSE
-        #     ORDER BY id
-        #     OFFSET %s LIMIT 1;
-        # """, (offset,))
-        # word_obj = cur.fetchone()
 
         # Mark the selected word as used
         cur.execute("UPDATE words SET used = TRUE WHERE id = %s;", (word_obj["id"],))
@@ -136,19 +121,6 @@ def get_word():
         print("Error in /api/word:", e)
         return jsonify({"error": str(e)}), 500
     
-#check word
-# @app.route("/api/check-word", methods=["POST"])
-# def check_word():
-#     data = request.get_json()
-#     chkword = data.get("guess", "").lower()  # get the submitted word
-
-#     valid_words = [w["word"] for w in WORDS]
-
-#     if chkword in valid_words:
-#         return jsonify({"valid": True})
-#     else:
-#         return jsonify({"valid": False})
-
 # =================== ADMIN API ===================
 # Function to prompt for password
 def check_auth(password):
@@ -428,7 +400,3 @@ def serve_static(filename):
         return "Not Found", 404
     
     return send_from_directory("static", filename)
-
-
-
-
